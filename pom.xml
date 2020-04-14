@@ -506,6 +506,20 @@
             <name>slimjars repo</name>
             <url>http://mvn.slimjars.com</url>
         </repository>
+        <!-- we can't find geo tools lib in apache maven repository    -->
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net repository</name>
+            <url>http://download.java.net/maven/2</url>
+        </repository>
+        <repository> <!--Add the snapshot repository here-->
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>opengeo</id>
+            <name>OpenGeo Maven Repository</name>
+            <url>http://repo.opengeo.org</url>
+        </repository>
     </repositories>
 
     <dependencies>
