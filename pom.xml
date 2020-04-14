@@ -508,9 +508,14 @@
         </repository>
         <!-- we can't find geo tools lib in apache maven repository    -->
         <repository> <!--Add the snapshot repository here-->
-            <id>Boundlessgeo</id>
-            <name>boundlessgeo Maven Repository</name>
-            <url>https://repo.boundlessgeo.com/main/</url>
+            <id>OSGEO</id>
+            <name>OSGEO Maven Repository</name>
+            <url>https://repo.osgeo.org/repository/release/</url>
+        </repository>
+        <repository>
+            <id>nzta-inhouse</id>
+            <name>nzta-inhouse</name>
+            <url>http://35.201.16.44/artifactory/inhouse/</url>
         </repository>
     </repositories>
 
