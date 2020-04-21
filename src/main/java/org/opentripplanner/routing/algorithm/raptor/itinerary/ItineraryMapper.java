@@ -290,11 +290,9 @@ public class ItineraryMapper {
                         .generateItinerary(graphPath, false, true, request.locale);
 
                 if (!onlyIfNonZeroDistance || subItinerary.walkDistance > 0) {
-                    subItinerary.legs.forEach(leg -> {
-                        itinerary.walkDistance += subItinerary.walkDistance;
-                        itinerary.walkTime += subItinerary.walkTime;
-                        itinerary.addLeg(leg);
-                    });
+                    subItinerary.legs.forEach(leg -> itinerary.addLeg(leg));
+                    itinerary.walkDistance += subItinerary.walkDistance;
+                    itinerary.walkTime += subItinerary.walkTime;
                 }
             } catch (TrivialPathException e) {
                 // Ignore, no legs need be copied
