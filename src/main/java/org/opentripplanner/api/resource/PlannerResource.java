@@ -82,9 +82,9 @@ public class PlannerResource extends RoutingResource {
                         request.rctx.fromVertices.iterator().next().getCoordinate(),
                         request.rctx.toVertices.iterator().next().getCoordinate()
                 );
-                double limit = request.maxWalkDistance * 2;
+
                 // Handle int overflow, in which case the multiplication will be less than zero
-                if (limit < 0 || distance < limit) {
+                if (hasWalkDistanceExceedLimitForNonTransitMode(distance, request)) {
                     itineraries.addAll(findNonTransitItineraries(request, router));
                     if(!itineraries.isEmpty()){
                         request.maxWalkDistance = distance;
@@ -188,7 +188,7 @@ public class PlannerResource extends RoutingResource {
     TripPlan tripPlan = new TripPlan(from, to, request.getDateTime());
     tripPlan.itinerary = itineraries
       .stream()
-      .filter(it -> !it.walkLimitExceeded) // Remove all itineraries with exceeded walk distance
+      .filter(it -> isEffectiveItineraryForNonTransitMode(it, request))
       .sorted(Comparator.comparing(i -> i.endTime))
       .limit(request.numItineraries)
       .collect(Collectors.toList());
@@ -201,6 +201,23 @@ public class PlannerResource extends RoutingResource {
       .mapToInt(it -> it.duration.intValue())
       .min()
       .orElseGet(() -> otpServer.getRouter().defaultRoutingRequest.maxPreTransitTime);
+  }
+
+  /**
+   * Check whether itinerary is effective under transit mode.
+   */
+  private boolean isEffectiveItineraryForNonTransitMode(Itinerary itinerary, RoutingRequest request) {
+    return !(itinerary.walkLimitExceeded && request.modes.isTransit());
+  }
+
+  /**
+   * Check whether the walk distance exceeds the maximum walk distance
+   * However, if requests look for non-transit mode only, we should ignore
+   * maximum walk distance limitation.
+   */
+  private boolean hasWalkDistanceExceedLimitForNonTransitMode(double distance, RoutingRequest request) {
+    double limit = request.maxWalkDistance * 2;
+    return limit < 0 || distance < limit || !request.modes.isTransit();
   }
 
 }
