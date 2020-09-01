@@ -1,5 +1,8 @@
 package org.opentripplanner.routing.algorithm;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.stream.Collectors;
 import org.opentripplanner.model.plan.Itinerary;
 import org.opentripplanner.routing.algorithm.filterchain.ItineraryFilter;
 import org.opentripplanner.routing.algorithm.filterchain.ItineraryFilterChainBuilder;
@@ -104,7 +107,8 @@ public class RoutingWorker {
         this.debugAggregator.finishedTransitRouter();
 
         // Filter itineraries
-        itineraries = filterItineraries(itineraries);
+        itineraries = filterItineraries(itineraries).stream()
+            .filter(it -> !it.nonTransitLimitExceeded).collect(toList());
         LOG.debug("Return TripPlan with {} itineraries", itineraries.size());
 
         this.debugAggregator.finishedFiltering();
