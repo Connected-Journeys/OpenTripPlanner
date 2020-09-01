@@ -107,8 +107,8 @@ public class RoutingWorker {
         this.debugAggregator.finishedTransitRouter();
 
         // Filter itineraries
-        itineraries = filterItineraries(itineraries).stream()
-            .filter(it -> !it.nonTransitLimitExceeded).collect(toList());
+        itineraries = filterItineraries(itineraries.stream()
+            .filter(it -> !it.nonTransitLimitExceeded).collect(toList()));
         LOG.debug("Return TripPlan with {} itineraries", itineraries.size());
 
         this.debugAggregator.finishedFiltering();
