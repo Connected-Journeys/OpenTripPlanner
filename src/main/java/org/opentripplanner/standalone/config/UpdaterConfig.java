@@ -30,7 +30,7 @@ public class UpdaterConfig {
       LOG.info("Creating updater in type '{}'", type);
 
       ConstructorDescriptor descriptor = ComponentAnnotationConfigurator.getInstance()
-        .getConstructorDescriptor(type, ServiceType.GraphUpdater);
+          .getConstructorDescriptor(type, ServiceType.GraphUpdater);
       Class<?> paramClazz = descriptor.getInitialClass();
       if (paramClazz != null) {
         try {
