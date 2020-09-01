@@ -83,7 +83,8 @@ public class RoutingWorker {
         List<Itinerary> itineraries = new ArrayList<>();
         List<RoutingError> routingErrors = new ArrayList<>();
         this.debugAggregator.finishedPrecalculating();
-
+        request.from = router.findClosest(request.from);
+        request.to = router.findClosest(request.to);
         // Direct street routing
         try {
             itineraries.addAll(DirectStreetRouter.route(router, request));
