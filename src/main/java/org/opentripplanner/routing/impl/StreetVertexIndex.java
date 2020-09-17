@@ -1,7 +1,9 @@
 package org.opentripplanner.routing.impl;
 
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.LineString;
@@ -329,6 +331,14 @@ public class StreetVertexIndex {
             RoutingRequest options,
             boolean endVertex
     ) {
+        Set<Vertex> result = new HashSet<>();
+        //let's find it's stop or not
+        if (location.stopId == null && location.getCoordinate() != null) {
+            graph
+                .getStopsByBoundingBox(location.lat, location.lng, location.lat, location.lng)
+                .forEach(st -> result.add(graph.index.getStopVertexForStop().get(st)));
+        }
+
         // Check if Stop/StopCollection is found by FeedScopeId
         if(location.stopId != null) {
             Set<Vertex> transitStopVertices = graph.getStopVerticesById(location.stopId);
@@ -341,8 +351,8 @@ public class StreetVertexIndex {
         Coordinate coordinate = location.getCoordinate();
         if (coordinate != null) {
             //return getClosestVertex(loc, options, endVertex);
-            return Collections.singleton(
-                    simpleStreetSplitter.getClosestVertex(location, options, endVertex));
+            result.add(simpleStreetSplitter.getClosestVertex(location, options, endVertex));
+            return result;
         }
 
         return null;
